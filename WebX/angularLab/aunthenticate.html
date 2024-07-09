@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>  
+<body>
+
+<h2>Authentication System</h2>
+
+<form name="myForm" novalidate ng-submit="submitForm()" ng-app="myApp" ng-controller="validateCtrl">
+
+<p>Username:<br>
+<input type="text" name="user" ng-model="user" required>
+<span style="color:red" ng-show="myForm.user.$dirty && myForm.user.$invalid">
+<span ng-show="myForm.user.$error.required">Username is required.</span>
+</span>
+</p>
+
+<p>Password:<br>
+<input type="password" name="password" ng-model="password" required>
+<span style="color:red" ng-show="myForm.password.$dirty && myForm.password.$invalid">
+<span ng-show="myForm.password.$error.required">Password is required.</span>
+</span>
+</p>
+
+<p>
+<input type="submit" ng-disabled="myForm.$invalid">
+</p>
+
+</form>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('validateCtrl', function($scope) {
+    $scope.users = [
+        {username:'Preeti', password:'123'},
+        {username:'Gargi', password:'456'}
+    ];
+    
+    $scope.submitForm = function() {
+        var match = $scope.users.find(function(user) {
+            return user.username === $scope.user && user.password === $scope.password;
+        });
+        
+        if (match) {
+            alert("Form submitted successfully!");
+        } else {
+            alert("Invalid username or password.");
+        }
+    };
+});
+</script>
+
+</body>
+</html>

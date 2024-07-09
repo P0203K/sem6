@@ -1,0 +1,15 @@
+{
+  "name": "mongodb",
+  "version": "1.0.0",
+  "description": "Mongo and node.js",
+  "main": "mongo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Preeti",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "mongoose": "^8.2.4"
+  }
+}

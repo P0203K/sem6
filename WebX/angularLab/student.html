@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="studentApp">
+
+<head>
+  <title>AngularJS Student Service Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body>
+
+  <div ng-controller="StudentController">
+    <!-- <h1>User Authentication using Angular Service</h1> -->
+
+    <div>
+      <label>Add User:</label>
+      <input type="text" ng-model="newStudent.name" placeholder="Name">
+      <input type="number" ng-model="newStudent.age" placeholder="Age">
+      <button ng-click="addStudent()">Add Student</button>
+    </div>
+  </div>
+
+  <div ng-controller="DisplayController">
+    <h2>Student List:</h2>
+    <ul>
+      <li ng-repeat="student in students">{{ student.name }} (Age: {{ student.age }})</li>
+    </ul>
+  </div>
+
+  <script>
+    var studentApp = angular.module('studentApp', []);
+
+    // Student Service
+    studentApp.service('studentService', function () {
+      var students = [];
+
+      this.addStudent = function (student) {
+        students.push(student);
+      };
+
+      this.getStudents = function () {
+        return students;
+      };
+    });
+
+    // Student Controller for adding students
+    studentApp.controller('StudentController', ['$scope', 'studentService', function ($scope, studentService) {
+      $scope.newStudent = {};
+
+      $scope.addStudent = function () {
+        studentService.addStudent($scope.newStudent);
+        $scope.newStudent = {}; // Clear the input fields
+      };
+    }]);
+
+    // Display Controller for showing the list of students
+    studentApp.controller('DisplayController', ['$scope', 'studentService', function ($scope, studentService) {
+      $scope.students = studentService.getStudents();
+    }]);
+  </script>
+
+</body>
+
+</html>
+

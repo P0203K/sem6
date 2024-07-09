@@ -1,0 +1,21 @@
+<h2>Login</h2>
+<form name="loginForm" ng-submit="login()">
+    <label>Username:</label>
+    <input type="text" name="username" ng-model="user.username" required><br>
+    <div ng-show="loginForm.username.$touched && loginForm.username.$error.required">
+        Username is required.
+    </div>
+
+    <label>Password:</label>
+    <input type="password" name="password" ng-model="user.password" required><br>
+    <div ng-show="loginForm.password.$touched && loginForm.password.$error.required">
+        Password is required.
+    </div>
+
+    <!-- Display error message for invalid login -->
+    <div ng-show="errorMessage">
+        {{ errorMessage }}
+    </div>
+
+    <button type="submit" ng-disabled="loginForm.$invalid">Login</button>
+</form>

@@ -1,0 +1,251 @@
+<div class="flash">
+  <!-- Display welcome message with username -->
+  <div class="welcome">
+    <h2>Welcome to Your Flashcards, {{ username | capitalize }}</h2>
+    <!-- Button to show the form for adding new flashcards -->
+    <button class="btn btn-primary" ng-click="showAddForm = !showAddForm">
+      Add New Flashcard
+    </button>
+  </div>
+
+  <!-- Display existing flashcards -->
+  <div class="search-bar">
+    <input
+      type="text"
+      ng-model="searchText"
+      placeholder="Search flashcards by title..."
+    />
+  </div>
+  <div class="flashcard-grid">
+    <div
+      class="flashcard"
+      ng-repeat="flashcard in flashcards | filter: filterByTitle"
+      flashcard-like="flashcard"
+    >
+      <div class="flashcard-inner">
+        <div
+          class="flashcard-front"
+          ng-class="{ 'liked': flashcard.state === 'liked' }"
+        >
+          <strong>{{ flashcard.title }}</strong>
+        </div>
+        <div
+          class="flashcard-back"
+          ng-class="{ 'liked': flashcard.state === 'liked' }"
+        >
+          <p>{{ flashcard.description }}</p>
+          <!-- Sound icon -->
+          <div class="sound-icon" ng-click="speak(flashcard.description)">
+            <img src="icon.png" alt="Sound Icon" class="sound-icon" />
+          </div>
+        </div>
+      </div>
+      <!-- Delete icon -->
+      <div
+        class="delete-icon"
+        ng-click="deleteFlashcard(flashcard)"
+        style="margin: 10px; margin-left: 120px"
+      >
+        <img src="delete.png" alt="Delete Icon" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Form for adding new flashcards (hidden by default) -->
+  <div ng-show="showAddForm" class="add-form" style="margin-top: 80px">
+    <form ng-submit="addFlashcard()">
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input
+          type="text"
+          class="form-control"
+          ng-model="newFlashcard.title"
+          id="title"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea
+          class="form-control"
+          style="resize: none"
+          rows="3"
+          ng-model="newFlashcard.description"
+          id="description"
+          required
+        ></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Flashcard</button>
+    </form>
+  </div>
+</div>
+
+<style>
+  /* Existing styles remain unchanged */
+  .flash {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+  }
+
+  .welcome {
+    background-color: #36af57;
+    padding: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .welcome h2 {
+    color: white;
+    margin: 0;
+  }
+
+  .btn-primary {
+    margin-left: 20px;
+  }
+
+  .search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .search-bar input[type="text"] {
+    width: 300px;
+    padding: 10px;
+    border: 2px solid #36af57;
+    border-radius: 20px;
+    font-size: 16px;
+    outline: none;
+  }
+
+  .search-bar input[type="text"]::placeholder {
+    color: #aaa;
+  }
+
+  .search-bar input[type="text"]:focus {
+    border-color: #007bff;
+  }
+
+  .flashcard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 30px;
+    margin: 10px;
+  }
+
+  .flashcard {
+    width: 100%;
+    height: 180px;
+    position: relative;
+    cursor: pointer;
+    perspective: 1000px;
+    border-radius: 10px;
+    user-select: none;
+    
+  }
+
+  .flashcard-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+    border-radius: 10px;
+  }
+
+  .flashcard:hover .flashcard-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flashcard-front,
+  .flashcard-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+  }
+
+  .flashcard-front {
+    z-index: 2;
+  }
+
+  .flashcard-back {
+    transform: rotateY(180deg);
+    z-index: 1;
+    padding: 10px;
+    color: #fff;
+    background-color: #232423;
+    overflow: hidden;
+  }
+
+  /* Add styles for the form */
+  .add-form {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .add-form form {
+    width: 100%;
+  }
+
+  .add-form .form-group {
+    margin-bottom: 20px;
+  }
+
+  .add-form label {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .add-form input[type="text"],
+  .add-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .add-form textarea {
+    height: 100px;
+  }
+
+  .add-form button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .add-form button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+
+  .liked {
+    background-color: #7fff00; /* Green for liked cards */
+  }
+
+  .sound-icon {
+    width: 20px; /* Adjust the width as needed */
+    height: 20px; /* Adjust the height as needed */
+    position: absolute;
+    top: 5px; /* Adjust the top position */
+    right: 5px; /* Adjust the right position */
+  }
+</style>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="bookApp">
+<head>
+  <title>Book Search</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('bookApp', [])
+      .controller('BookController', function($scope, $http) {
+        $http.get('books.json')
+          .then(function(response) {
+            $scope.books = response.data;
+          })
+          .catch(function(error) {
+            console.error('Error loading books:', error);
+          });
+
+        $scope.searchText = '';
+      })
+      .filter('bookFilter', function() {
+        return function(books, searchText) {
+          var filteredBooks = [];
+          searchText = searchText.toLowerCase();
+          angular.forEach(books, function(book) {
+            var title = (book.title || '').toLowerCase();
+            var author = (book.author || '').toLowerCase();
+            var genre = (book.genre || '').toLowerCase();
+            if (title.includes(searchText) || author.includes(searchText) || genre.includes(searchText)) {
+              filteredBooks.push(book);
+            }
+          });
+          return filteredBooks;
+        };
+      });
+  </script>
+</head>
+<body>
+  <div ng-controller="BookController">
+    <h1>Book Search</h1>
+    <input type="text" ng-model="searchText" placeholder="Search...">
+    <ul>
+      <li ng-repeat="book in books | bookFilter:searchText">
+        {{book.title}} by {{book.author}} ({{book.genre}})
+      </li>
+    </ul>
+  </div>
+</body>
+</html>

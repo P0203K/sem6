@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html   ng-app="myApp"  >
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-controller="myCtrl">
+    <!-- two way -->
+	<input ng-model="name" placeholder="Firstname">
+	<input ng-model="lastname" placeholder="Lastname">
+    <h1>{{name}} {{lastname}}</h1>
+
+    <!-- one way -->
+    <input ng-bind="country" placeholder="Country">
+    <h2>{{country}}</h2>
+ 
+</div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+    $scope.name = "Preeti";
+    $scope.lastname = "Khamkar";
+    $scope.country = "India";
+});
+</script>
+</body>
+</html>

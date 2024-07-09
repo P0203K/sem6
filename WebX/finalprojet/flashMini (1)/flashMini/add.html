@@ -1,0 +1,13 @@
+<!-- add.html -->
+
+<form ng-submit="addFlashcard()">
+    <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" class="form-control" ng-model="newFlashcard.title" id="title" required>
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea class="form-control" rows="3" ng-model="newFlashcard.description" id="description" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Flashcard</button>
+</form>

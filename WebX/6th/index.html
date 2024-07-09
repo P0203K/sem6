@@ -1,0 +1,165 @@
+<!-- working with error displayed of all fields -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration Page</title>
+    <script>
+      var existingUsers = []; // Simulated existing usernames
+
+      function registerUser() {
+        var name = document.getElementById("name").value;
+        var college = document.getElementById("college").value;
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (name === "") {
+          displayError("Name field cannot be empty");
+          return;
+        }
+
+        if (college === "") {
+          displayError("College field cannot be empty");
+          return;
+        }
+
+        if (username === "") {
+          displayError("Username field cannot be empty");
+          return;
+        }
+
+        if (password === "") {
+          displayError("Password field cannot be empty");
+          return;
+        }
+
+        if (confirmPassword === "") {
+          displayError("Confirm Password field cannot be empty");
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          displayError("Passwords do not match");
+          return;
+        }
+
+        if (existingUsers.includes(username)) {
+          displayError("Username already exists");
+          return;
+        }
+
+        // Simulate registration success
+        document.getElementById("registrationMessage").innerHTML =
+          "Successfully Registered";
+      }
+
+      function displayError(message) {
+        document.getElementById("errorMessage").textContent = message;
+      }
+
+      var colleges = []; // Array to store colleges
+
+      function initializeColleges() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "colleges.json", true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            colleges = JSON.parse(xhr.responseText);
+          }
+        };
+        xhr.send();
+      }
+
+      function showSuggestions() {
+        var input = document.getElementById("college").value;
+        var suggestions = suggestColleges(input);
+        var suggestionList = document.getElementById("suggestions");
+        suggestionList.innerHTML = "";
+        suggestions.forEach((college) => {
+          var suggestion = document.createElement("li");
+          suggestion.textContent = college;
+          suggestion.addEventListener("click", function () {
+            document.getElementById("college").value = college;
+            suggestionList.innerHTML = "";
+          });
+          suggestionList.appendChild(suggestion);
+        });
+      }
+
+      function suggestColleges(input) {
+        return colleges.filter((college) =>
+          college.toLowerCase().startsWith(input.toLowerCase())
+        );
+      }
+
+      // Initialize colleges when the page loads
+      window.onload = function () {
+        initializeColleges();
+      };
+
+      // Function to check password match on blur event
+      function checkPasswordMatch() {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+          displayError("Passwords do not match");
+        } else {
+          displayError("");
+        }
+      }
+    </script>
+</head>
+  <body>
+    <h2>Registration Page</h2>
+    <form>
+      <label for="name">Name:</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        onblur="displayError(this.value ? '' : 'Name field cannot be empty')"
+      /><br />
+      <br />
+      <label for="college">College:</label>
+      <input
+        type="text"
+        id="college"
+        name="college"
+        oninput="showSuggestions(); displayError(this.value ? '' : 'College field cannot be empty')"
+      />
+      <ul id="suggestions"></ul>
+      <br /><br />
+      <label for="username">Username:</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        onblur="displayError(this.value ? '' : 'Username field cannot be empty')"
+      /><br />
+      <br />
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        onblur="checkPasswordMatch(); displayError(this.value ? '' : 'Password field cannot be empty')"
+      /><br />
+      <br />
+      <label for="confirmPassword">Confirm Password:</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        onblur="checkPasswordMatch(); displayError(this.value ? '' : 'Confirm Password field cannot be empty')"
+      /><br />
+      <br />
+      <div id="errorMessage" style="color: red"></div>
+      <br />
+      <input type="button" value="Register" onclick="registerUser()" />
+    </form>
+    <div id="registrationMessage"></div>
+  </body>
+</html>
